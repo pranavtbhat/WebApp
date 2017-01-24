@@ -40,7 +40,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.ErrorHandler;
 
-
 class MyParser {
     
     static final String columnSeparator = "|*|";
@@ -67,20 +66,12 @@ class MyParser {
     static Map<String,String> CountryMap;
     static Map<String,String> RatingMap;
     
-    // Datastructures for ItemCategory Table
-    static List<Integer> CategoryItemIDColumn;
-    static List<String> CategoryColumn;
+    // Date Formatting
+    static SimpleDateFormat dtf;
+    static SimpleDateFormat sqldtf;
     
-    // Datastructures for SellerRating Table
-    static List<String> SellerUserIDColumn;
-    static List<Integer> RatingColumn;
-    
-    // Datastructures for Bids Table
-    static List<Integer> BidItemIDColumn;
-    static List<String> BidUserIDColumn;
-    static List<Date> TimeColumn;
-    static List<Float> AmountColumn;
-    
+    // Files
+    static PrintWriter Users, Bids, Items, ItemCategory, SellerRating;
     
     static class MyErrorHandler implements ErrorHandler {
         
@@ -178,7 +169,7 @@ class MyParser {
         }
     }
     
-    static void processBidsNode(String ItemID, Element bids){
+    static void processBidsNode(Integer ItemID, Element bids) throws ParseException{
     	Element[] bidList = getElementsByTagNameNR(bids, "Bid");
     	String s;
     	
@@ -187,29 +178,65 @@ class MyParser {
     		String UserID = bidder.getAttribute("UserID");
     		Integer Rating = Integer.parseInt(bidder.getAttribute("Rating"));
     		
-    		// Insert into User Table
-    		if(!LocationMap.containsKey(UserID)){
-    			s = getElementTextByTagNameNR(bidder, "Location");
-    			LocationMap.put(UserID, s == "" ? null : s);
-    		}
-    		
     		if(!CountryMap.containsKey(UserID)){
     			s = getElementTextByTagNameNR(bidder, "Country");
     			CountryMap.put(UserID, s == "" ? null : s);
     		}
     		
     		s = getElementTextByTagNameNR(bid, "Time");
+    		Date Time = dtf.parse(s);
     		
-    		System.out.println("B " + ItemID + " " + UserID + " " + s);
+    		Float Amount = Float.parseFloat(
+	        	strip(getElementTextByTagNameNR(bid, "Amount"))
+	        );
+    		
+    		
+    		// Insert into User Table
+    		if(!LocationMap.containsKey(UserID)){
+    			s = getElementTextByTagNameNR(bidder, "Location");
+    			LocationMap.put(UserID, s == "" ? null : s);
+    			
+    			s = getElementTextByTagNameNR(bidder, "Country");
+    			CountryMap.put(UserID, s == "" ? null : s);
+    
+    	        RatingMap.put(UserID, Rating.toString());
+    		}
+    		
+    		// Insert into Bid table
+    		Bids.println(
+    			ItemID + "," +
+    			escape(UserID) + "," +
+    			sqldtf.format(Time) + "," +
+    			Amount
+    		);
     	}
     }
     
-    static void processItemNode(Element item){
+    static String escape(Object s){
+    	if(s == null){
+    		return "";
+    	}
+    	else{
+    		return "\"" + s.toString() + "\"";
+    	}
+    }
+    
+    static void processItemNode(Element item) throws ParseException{
     	String s;
+    	Element e;
     	
-        String ItemID = item.getAttribute("ItemID");
+        Integer ItemID = Integer.parseInt(item.getAttribute("ItemID"));
         
         String Name = getElementTextByTagNameNR(item, "Name");
+        
+        // Insert into Categories table
+        for(Element Category : getElementsByTagNameNR(item, "Category")){
+        	ItemCategory.println(
+        		ItemID + "," +
+        		escape(getElementText(Category))
+        	);
+        	
+        }
         
         Float Currently = Float.parseFloat(
         	strip(getElementTextByTagNameNR(item, "Currently"))
@@ -228,13 +255,55 @@ class MyParser {
         
         processBidsNode(ItemID, getElementByTagNameNR(item, "Bids"));
         
-        System.out.println("I " + ItemID + " " + Number_of_Bids);
+        e = getElementByTagNameNR(item, "Location");
+        String Location = getElementText(e);
+        s = e.getAttribute("Latitude");
+        Float Latitude = s == "" ? null : Float.parseFloat(s);
+        s = e.getAttribute("Longitude");
+        Float Longitude = s == "" ? null : Float.parseFloat(s);
+        
+        String Country = getElementTextByTagNameNR(item, "Country");
+        
+        Date Started = dtf.parse(getElementTextByTagNameNR(item, "Started"));
+        
+        Date Ends = dtf.parse(getElementTextByTagNameNR(item, "Ends"));
+        
+        e = getElementByTagNameNR(item, "Seller");
+        String SellerUserID = e.getAttribute("UserID");
+        Integer Rating = Integer.parseInt(e.getAttribute("Rating"));
+        
+        String Description = getElementTextByTagNameNR(item, "Description");
+        
+        // Insert data into SellerRating table
+        SellerRating.println(
+        	escape(SellerUserID) + "," + 
+			Rating
+        );
+        
+        // Insert data into User Table
+        Description = Description.substring(0, Math.min(4000 + 1, Description.length()));
+    	
+        Items.println(
+        	ItemID + "," +
+        	escape(SellerUserID) + "," +
+        	escape(Name) + "," +
+        	Currently + "," +
+        	Buy_Price + "," + 
+        	First_Bid + "," + 
+        	escape(Location) + "," +
+        	Longitude + "," +
+        	Latitude + "," + 
+        	escape(Country) + "," +
+        	sqldtf.format(Started) + "," +
+        	sqldtf.format(Ends) + "," + 
+        	Description
+        );
 	}
 	
     
     /* Process one items-???.xml file.
      */
-    static void processFile(File xmlFile) {
+    static void processFile(File xmlFile) throws ParseException {
         Document doc = null;
         try {
             doc = builder.parse(xmlFile);
@@ -270,26 +339,26 @@ class MyParser {
         
     }
     
-    public static void main (String[] args) {
-    	// Initialize data structures
+    public static void main (String[] args) throws Exception {
     	// Datastructures for User Table
         LocationMap = new HashMap<String,String>();
         CountryMap = new HashMap<String,String>();
         RatingMap = new HashMap<String,String>();
         
-        // Datastructures for ItemCategory Table
-        CategoryItemIDColumn = new ArrayList<Integer>();
-        CategoryColumn = new ArrayList<String>();
+        // DateTime Formatter
+        dtf = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
+        sqldtf = new SimpleDateFormat("yyyy-MM-dd hh-mm-ss");
         
-        // Datastructures for SellerRating Table
-        SellerUserIDColumn = new ArrayList<String>();
-        RatingColumn = new ArrayList<Integer>();
-        
-        // Datastructures for Bids Table
-        BidItemIDColumn = new ArrayList<Integer>();
-        BidUserIDColumn = new ArrayList<String>();
-        TimeColumn = new ArrayList<Date>();
-        AmountColumn = new ArrayList<Float>();
+        // Directory and file structures
+        File parsed = new File("parsed");
+        if(!parsed.exists()){
+        	parsed.mkdir();
+        }
+        Users = new PrintWriter("parsed/Users.dat", "UTF-8");
+        Bids = new PrintWriter("parsed/Bids.dat", "UTF-8");
+        Items = new PrintWriter("parsed/Items.dat", "UTF-8");
+        ItemCategory = new PrintWriter("parsed/ItemCategory.dat", "UTF-8");
+        SellerRating = new PrintWriter("parsed/SellerRating.dat", "UTF-8");
         
         if (args.length == 0) {
             System.out.println("Usage: java MyParser [file] [file] ...");
@@ -318,5 +387,23 @@ class MyParser {
             File currentFile = new File(args[i]);
             processFile(currentFile);
         }
+        
+        /* Write to Users table */
+        for(String UserID : RatingMap.keySet()){
+        	Users.println(
+        		escape(UserID) + "," +
+        		escape(LocationMap.get(UserID)) + "," +
+        		escape(CountryMap.get(UserID)) + "," +
+        		RatingMap.get(UserID)
+        	);
+        }
+        
+        Users.close();
+        Bids.close();
+        Items.close();
+        ItemCategory.close();
+        SellerRating.close();
+        
+        
     }
 }

@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS Items(
     Currently DECIMAL(8,2) NOT NULL,
     Buy_Price DECIMAL(8,2),
     First_Bid DECIMAL(8,2) NOT NULL,
-    Number_of_Bids INT(5) NOT NULL,
     Location varchar(200) NOT NULL,
     Longitude FLOAT(9, 6),
     Latitude FLOAT(9, 6),
@@ -43,13 +42,4 @@ CREATE TABLE IF NOT EXISTS SellerRating(
     Rating INT NOT NULL,
     PRIMARY KEY(UserID)
 );
-
-ALTER TABLE Bids ADD CONSTRAINT Bids_fk0 FOREIGN KEY (ItemID) REFERENCES Items(ItemID);
-
-ALTER TABLE Bids ADD CONSTRAINT Bids_fk1 FOREIGN KEY (UserID) REFERENCES Users(UserID);
-
-ALTER TABLE Items ADD CONSTRAINT Items_fk0 FOREIGN KEY (SellerID) REFERENCES Users(UserID);
-
-ALTER TABLE ItemCategory ADD CONSTRAINT ItemCategory_fk0 FOREIGN KEY (ItemID) REFERENCES Items(ItemID); 
-ALTER TABLE SellerRating ADD CONSTRAINT SellerRating_fk0 FOREIGN KEY (UserID) REFERENCES Users(UserID);
 
