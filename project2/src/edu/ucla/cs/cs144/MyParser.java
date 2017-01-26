@@ -274,13 +274,15 @@ class MyParser {
         
         String Description = getElementTextByTagNameNR(item, "Description");
         
+        // Insert data into Users table
+        
         // Insert data into SellerRating table
         SellerRating.println(
         	escape(SellerUserID) + "," + 
 			Rating
         );
         
-        // Insert data into User Table
+        // Insert data into Items Table
         Description = Description.substring(0, Math.min(4000 + 1, Description.length()));
     	
         Items.println(
@@ -354,6 +356,7 @@ class MyParser {
         if(!parsed.exists()){
         	parsed.mkdir();
         }
+        
         Users = new PrintWriter("parsed/Users.dat", "UTF-8");
         Bids = new PrintWriter("parsed/Bids.dat", "UTF-8");
         Items = new PrintWriter("parsed/Items.dat", "UTF-8");
