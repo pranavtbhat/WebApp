@@ -1,5 +1,5 @@
-mysql TEST < drop.sql
-mysql TEST < create.sql
+mysql -u cs144 CS144 < drop.sql
+mysql -u cs144 CS144 < create.sql
 
 # Run parser
 ant run-all
@@ -16,8 +16,8 @@ done
 rm data.tmp
 
 # Load data into db
-mysql TEST < load.sql
+mysql -u cs144 CS144 < load.sql
 
 # Remove .dat files directory
-# rm -rf parsed/
+rm -rf parsed/
 

@@ -73,6 +73,9 @@ class MyParser {
     // Files
     static PrintWriter Users, Bids, Items, ItemCategory, SellerRating;
     
+    // Separator
+    static private String SEP = "<?>";
+    
     static class MyErrorHandler implements ErrorHandler {
         
         public void warning(SAXParseException exception)
@@ -204,22 +207,14 @@ class MyParser {
     		
     		// Insert into Bid table
     		Bids.println(
-    			ItemID + "," +
-    			escape(UserID) + "," +
-    			sqldtf.format(Time) + "," +
+    			ItemID + SEP +
+    			UserID + SEP +
+    			sqldtf.format(Time) + SEP +
     			Amount
     		);
     	}
     }
     
-    static String escape(Object s){
-    	if(s == null){
-    		return "";
-    	}
-    	else{
-    		return "\"" + s.toString() + "\"";
-    	}
-    }
     
     static void processItemNode(Element item) throws ParseException{
     	String s;
@@ -232,8 +227,8 @@ class MyParser {
         // Insert into Categories table
         for(Element Category : getElementsByTagNameNR(item, "Category")){
         	ItemCategory.println(
-        		ItemID + "," +
-        		escape(getElementText(Category))
+        		ItemID + SEP +
+        		getElementText(Category)
         	);
         	
         }
@@ -278,7 +273,7 @@ class MyParser {
         
         // Insert data into SellerRating table
         SellerRating.println(
-        	escape(SellerUserID) + "," + 
+        	SellerUserID + SEP + 
 			Rating
         );
         
@@ -286,18 +281,18 @@ class MyParser {
         Description = Description.substring(0, Math.min(4000 + 1, Description.length()));
     	
         Items.println(
-        	ItemID + "," +
-        	escape(SellerUserID) + "," +
-        	escape(Name) + "," +
-        	Currently + "," +
-        	Buy_Price + "," + 
-        	First_Bid + "," + 
-        	escape(Location) + "," +
-        	Longitude + "," +
-        	Latitude + "," + 
-        	escape(Country) + "," +
-        	sqldtf.format(Started) + "," +
-        	sqldtf.format(Ends) + "," + 
+        	ItemID + SEP +
+        	SellerUserID + SEP +
+        	Name + SEP +
+        	Currently + SEP +
+        	Buy_Price + SEP + 
+        	First_Bid + SEP + 
+        	Location + SEP +
+        	Longitude + SEP +
+        	Latitude + SEP + 
+        	Country + SEP +
+        	sqldtf.format(Started) + SEP +
+        	sqldtf.format(Ends) + SEP + 
         	Description
         );
 	}
@@ -394,9 +389,9 @@ class MyParser {
         /* Write to Users table */
         for(String UserID : RatingMap.keySet()){
         	Users.println(
-        		escape(UserID) + "," +
-        		escape(LocationMap.get(UserID)) + "," +
-        		escape(CountryMap.get(UserID)) + "," +
+        		UserID + SEP +
+        		LocationMap.get(UserID) + SEP +
+        		CountryMap.get(UserID) + SEP +
         		RatingMap.get(UserID)
         	);
         }
