@@ -323,7 +323,7 @@ class MyParser {
         /* Fill in code here (you will probably need to write auxiliary
             methods). */
         Element[] itemList = getElementsByTagNameNR(
-        	(Element) doc.getDocumentElement(), 
+        	doc.getDocumentElement(), 
         	"Item"
         );
         
