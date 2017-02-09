@@ -62,5 +62,16 @@ public class AuctionSearchTest {
 		basicResults = as.basicSearch(query, 0, 770);
 		System.out.println("Basic Seacrh Query: " + query + " ALL");
 		System.out.println("Received " + basicResults.length + " results");
+		
+		query = "kitchenware";
+		region = new SearchRegion(33.774, -118.63, 34.201, -117.38); 
+		spatialResults = as.spatialSearch(query, region, 10, 50);
+		System.out.println("Spatial search " + query + " skip 10");
+		System.out.println("Received " + spatialResults.length + " results");
+		
+		itemId = "1043495702";
+		item = as.getXMLDataForItemId(itemId);
+		System.out.println("XML data for ItemId: " + itemId);
+		System.out.println(item);
 	}
 }
