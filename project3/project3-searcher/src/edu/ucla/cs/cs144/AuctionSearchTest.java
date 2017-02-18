@@ -38,40 +38,40 @@ public class AuctionSearchTest {
 		System.out.println(item);
 
 		// Add your own test here
-		query = "superman";
-		basicResults = as.basicSearch(query, 0, 1000);
-		System.out.println("Basic Seacrh Query: " + query + " ALL");
-		System.out.println("Received " + basicResults.length + " results");
-		
-		query = "superman";
-		basicResults = as.basicSearch(query, 50, 18);
-		System.out.println("Basic Seacrh Query: " + query + " Last 18");
-		System.out.println("Received " + basicResults.length + " results");
-		
-		query = "kitchenware";
-		basicResults = as.basicSearch(query, 0, 2000);
-		System.out.println("Basic Seacrh Query: " + query + " ALL");
-		System.out.println("Received " + basicResults.length + " results");
-		
-		query = "kitchenware";
-		basicResults = as.basicSearch(query, 440, 21);
-		System.out.println("Basic Seacrh Query: " + query + " Mid 21");
-		System.out.println("Received " + basicResults.length + " results");
-		
-		query = "star trek";
-		basicResults = as.basicSearch(query, 0, 770);
-		System.out.println("Basic Seacrh Query: " + query + " ALL");
-		System.out.println("Received " + basicResults.length + " results");
-		
-		query = "kitchenware";
-		region = new SearchRegion(33.774, -118.63, 34.201, -117.38); 
-		spatialResults = as.spatialSearch(query, region, 10, 50);
-		System.out.println("Spatial search " + query + " skip 10");
-		System.out.println("Received " + spatialResults.length + " results");
-		
-		itemId = "1043495702";
-		item = as.getXMLDataForItemId(itemId);
-		System.out.println("XML data for ItemId: " + itemId);
-		System.out.println(item);
+//		query = "superman";
+//		basicResults = as.basicSearch(query, 0, 100);
+//		System.out.println("Basic Seacrh Query: " + query + " ALL");
+//		System.out.println("Received " + basicResults.length + " results");
+//		
+//		query = "superman";
+//		basicResults = as.basicSearch(query, 50, 18);
+//		System.out.println("Basic Seacrh Query: " + query + " Last 18");
+//		System.out.println("Received " + basicResults.length + " results");
+//		
+//		query = "kitchenware";
+//		basicResults = as.basicSearch(query, 0, 2000);
+//		System.out.println("Basic Seacrh Query: " + query + " ALL");
+//		System.out.println("Received " + basicResults.length + " results");
+//		
+//		query = "kitchenware";
+//		basicResults = as.basicSearch(query, 440, 21);
+//		System.out.println("Basic Seacrh Query: " + query + " Mid 21");
+//		System.out.println("Received " + basicResults.length + " results");
+//		
+//		query = "star trek";
+//		basicResults = as.basicSearch(query, 0, 770);
+//		System.out.println("Basic Seacrh Query: " + query + " ALL");
+//		System.out.println("Received " + basicResults.length + " results");
+//		
+//		query = "kitchenware";
+//		region = new SearchRegion(33.774, -118.63, 34.201, -117.38); 
+//		spatialResults = as.spatialSearch(query, region, 10, 50);
+//		System.out.println("Spatial search " + query + " skip 10");
+//		System.out.println("Received " + spatialResults.length + " results");
+//		
+//		itemId = "1043495702";
+//		item = as.getXMLDataForItemId(itemId);
+//		System.out.println("XML data for ItemId: " + itemId);
+//		System.out.println(item);
 	}
 }
