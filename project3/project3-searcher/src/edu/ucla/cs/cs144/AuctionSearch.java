@@ -415,8 +415,8 @@ public class AuctionSearch implements IAuctionSearch {
     }
     
     private String processString(String s){
-    	s = s.replaceAll("\"", "&quot;");
-    	s = s.replaceAll("\'", "&apos;");
+//    	s = s.replaceAll("\"", "&quot;");
+//    	s = s.replaceAll("\'", "&apos;");
     	s = s.replaceAll("<" , "&lt;");
     	s = s.replaceAll(">", "&gt");
     	s = s.replaceAll("&", "&amp;");
