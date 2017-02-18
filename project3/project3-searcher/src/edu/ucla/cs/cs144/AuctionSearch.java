@@ -329,7 +329,7 @@ public class AuctionSearch implements IAuctionSearch {
             	}
             	
             	// Currently
-            	sb.append("<Currently>" + itemSet.getString("Currently") + "</Currently>\n");
+            	sb.append("<Currently>$" + itemSet.getString("Currently") + "</Currently>\n");
             	
             	// Buy_Price
             	String Buy_Price = itemSet.getString("Buy_Price");
