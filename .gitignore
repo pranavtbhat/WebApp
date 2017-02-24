@@ -4,3 +4,5 @@ bin
 parsed
 
 .DS_STORE
+
+build

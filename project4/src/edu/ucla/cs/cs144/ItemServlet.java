@@ -57,34 +57,41 @@ public class ItemServlet extends HttpServlet implements Servlet {
         
         try{
         	Document dom = toXML(xmlData);
-        	request.setAttribute("xmlData", xmlData);
         	
-        	request.setAttribute("Name", getElementText(
-        			(Element) dom.getElementsByTagName("Name").item(0)
-        		)
-        	);
+        	request.setAttribute("Name", getElementText((Element) dom.getElementsByTagName("Name").item(0)));
+        	request.setAttribute("Started", getElementText((Element) dom.getElementsByTagName("Started").item(0)));
+        	request.setAttribute("Ends", getElementText((Element) dom.getElementsByTagName("Ends").item(0)));
+        	request.setAttribute("Currently", getElementText((Element) dom.getElementsByTagName("Currently").item(0)));
+        	request.setAttribute("First_Bid", getElementText((Element) dom.getElementsByTagName("First_Bid").item(0)));
         	
-        	request.setAttribute("Started", getElementText(
-        			(Element) dom.getElementsByTagName("Started").item(0)
-        		)
-        	);
+        	if(dom.getElementsByTagName("Buy_Price").item(0) != null){
+        		request.setAttribute("Buy_Price", getElementText((Element) dom.getElementsByTagName("Buy_Price").item(0)));
+        	}
         	
-        	request.setAttribute("Ends", getElementText(
-        			(Element) dom.getElementsByTagName("Ends").item(0)
-        		)
-        	);
+        	request.setAttribute("Location", getElementText((Element) dom.getElementsByTagName("Location").item(0)));
+        	request.setAttribute("Country", getElementText((Element) dom.getElementsByTagName("Country").item(0)));
         	
-        	request.setAttribute("Currently", getElementText(
-        			(Element) dom.getElementsByTagName("Currently").item(0)
-        		)
-        	);
+        	Element seller = (Element) dom.getElementsByTagName("Seller").item(0);
+        	request.setAttribute("SellerID", seller.getAttribute("UserID"));
+        	request.setAttribute("SellerRating", seller.getAttribute("Rating"));
         	
-        	request.setAttribute("First_Bid", getElementText(
-        			(Element) dom.getElementsByTagName("First_Bid").item(0)
-        		)
-        	);
         	
         	request.setAttribute("Categories", getCategories(dom));
+        	
+        	request.setAttribute("Number_of_Bids", getElementText((Element) dom.getElementsByTagName("Number_of_Bids").item(0)));
+        	NodeList bidList = dom.getElementsByTagName("Bid");
+        	String[][] bidInfo = new String[bidList.getLength()][3];
+        	
+        	for(int i=0;i<bidList.getLength();i++){
+        		Element bid = (Element) bidList.item(i);
+        		Element bidder = (Element) ((Element) bid).getElementsByTagName("Bidder").item(0);
+        		bidInfo[i][0] = bidder.getAttribute("UserID");
+        		bidInfo[i][1] = getElementText((Element) bid.getElementsByTagName("Time").item(0));
+        		bidInfo[i][2] = getElementText((Element) bid.getElementsByTagName("Amount").item(0));
+        	}
+        	
+        	request.setAttribute("bidInfo", bidInfo);
+        	
         }
         catch(Exception e){
         	PrintWriter out = response.getWriter();
