@@ -68,7 +68,24 @@ public class ItemServlet extends HttpServlet implements Servlet {
         		request.setAttribute("Buy_Price", getElementText((Element) dom.getElementsByTagName("Buy_Price").item(0)));
         	}
         	
-        	request.setAttribute("Location", getElementText((Element) dom.getElementsByTagName("Location").item(0)));
+        	Node child = dom.getFirstChild().getFirstChild();
+        	String Location = null;
+        	String Latitude = null;
+        	String Longitude = null;
+        	
+        	while(child != null){
+        		if(child.getNodeName().equals("Location")){
+        			Location = getElementText((Element) child);
+        			Latitude = ((Element)child).getAttribute("Latitude");
+        			Longitude = ((Element)child).getAttribute("Longitude");
+        		}
+        		child = child.getNextSibling();
+        	}
+        	
+        	request.setAttribute("Location", Location);
+        	request.setAttribute("Latitude", Latitude);
+        	request.setAttribute("Longitude", Longitude);
+        	
         	request.setAttribute("Country", getElementText((Element) dom.getElementsByTagName("Country").item(0)));
         	
         	Element seller = (Element) dom.getElementsByTagName("Seller").item(0);
