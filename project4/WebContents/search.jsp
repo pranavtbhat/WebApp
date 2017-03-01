@@ -2,26 +2,7 @@
     <head>
         <title>Search Items</title>
     </head>
-    <style>
-body {
-    background-color: black;
-    color: white;
-}
-.main {
-    align: center;
-    width: 50%;
-    margin: 0 auto;
-}
-
-td.col-id {
-    text-align: left;
-}
-
-td.col-name {
-    text-align: right;
-}
-    </style>
-
+    <link rel="stylesheet" href="search.css"></style>
     <script src="search.js" type="text/javascript"></script>
     <body>
         <div class="main">
@@ -32,7 +13,6 @@ td.col-name {
                 <input type="hidden" name="numResultsToReturn" value=20>
                 <input type="submit">
             </form>
-            <b>Suggestion</b>: <pre id="suggestion"></pre>
 
             <% 
             String query = (String) request.getAttribute("query");

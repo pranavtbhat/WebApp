@@ -1,0 +1,40 @@
+body {
+    background-color: black;
+    color: white;
+}
+
+div.main {
+    align: center;
+    width: 50%;
+    margin: 0 auto;
+}
+
+td.col-id {
+    text-align: left;
+}
+
+td.col-name {
+    text-align: right;
+}
+
+div.suggestions {
+    background-color: white;
+    color: black;
+    box-sizing: border-box;
+    border: 5px solid white;
+    position: absolute;
+    opacity: 100%;
+}
+
+div.suggestions div.item {
+    background-color: white;
+    color: black;
+    cursor: default;
+    padding: 0px 3px;
+    opacity: 100%;
+}
+
+div.suggestions div.current {
+    background-color: #3366cc;
+    color: white;
+}
