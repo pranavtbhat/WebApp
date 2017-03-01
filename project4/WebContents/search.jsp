@@ -20,17 +20,19 @@ td.col-id {
 td.col-name {
     text-align: right;
 }
-
     </style>
+
+    <script src="search.js" type="text/javascript"></script>
     <body>
         <div class="main">
             <h1>eBay Item Search</h1>
-            <form action="" method="GET">
-                Please enter your query: <input name="query" type="text">
+            <form action="" method="GET" autocomplete="off">
+                Please enter your query: <input id="input" name="query" type="text" onKeyUp="sendAjaxRequest(this.value);">
                 <input type="hidden" name="numResultsToSkip" value=0>
                 <input type="hidden" name="numResultsToReturn" value=20>
                 <input type="submit">
             </form>
+            <b>Suggestion</b>: <pre id="suggestion"></pre>
 
             <% 
             String query = (String) request.getAttribute("query");
