@@ -50,7 +50,7 @@
         <jar basedir="${build-dir}" destfile="${build-dir}/${war-name}.war"/>
     </target>
 
-    <target name="deploy" depends="build">		
+    <target name="deploy">		
         <delete dir="${env.CATALINA_BASE}/webapps/${war-name}" />
         <delete dir="${env.CATALINA_BASE}/work/Catalina/localhost/${war-name}" />
         <copy file="${build-dir}/${war-name}.war" todir="${env.CATALINA_BASE}/webapps" preservelastmodified="true" overwrite="true" />
